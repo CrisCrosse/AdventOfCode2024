@@ -9,7 +9,7 @@ def get_sorted_lists_from_input():
     # was getting an answer too high (?) because the first set of values in the text file were registered
     # as the column names, so I had to add the column names manually, the sep was also wrong at 2 spaces
     # not 3 as it was in the txt file
-    id_dataframe = pandas.read_csv('input.txt', sep='   ', engine='python')
+    id_dataframe = pandas.read_csv('../../input.txt', sep='   ', engine='python')
 
     print(id_dataframe)
     id_dataframe.columns = ['Column1', 'Column2']
