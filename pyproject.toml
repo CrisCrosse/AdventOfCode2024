@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "adventofcode2024-day1"
+version = "0.1.0"
+description = "Day 1 of advent of code 2024 coding challenge"
+authors = ["Chris Rossell <chris.rossell@autotrader.co.uk>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
