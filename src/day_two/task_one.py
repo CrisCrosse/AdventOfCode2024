@@ -51,6 +51,7 @@ def is_valid_increment(difference):
 
 def is_safe_report(report):
     last_index_in_report = len(report) - 1
+    has_skipped_an_index = False
 
     # get if the list is increasing or decreasing to compare each increment against
     first_diff = report[1] - report[0]
@@ -64,6 +65,9 @@ def is_safe_report(report):
         print("value: ", level)
         print("index: ", index)
 
+        # removal cases for dampener;
+        # the difference between item a and item b
+
 
         if index < last_index_in_report:
             next_level = report[index + 1]
@@ -76,7 +80,7 @@ def is_safe_report(report):
                 return False
 
             if not is_valid_increment(abs(difference)):
-                return False
+                    return False
     return True
 
 
