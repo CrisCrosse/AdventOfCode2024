@@ -1,4 +1,4 @@
-from day_three.task_one import get_input_from_txt_file, match_mul_and_numbers_from_string, \
+from day_3.task_one import get_input_from_txt_file, match_mul_and_numbers_from_string, \
     match_only_numbers_from_string, multiply_tuples_and_return_sum, main, get_matching_pairs_and_multiplication_sums
 
 

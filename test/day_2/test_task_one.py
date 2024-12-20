@@ -1,4 +1,4 @@
-from day_two.task_one import is_safe_report
+from day_2.task_one import is_safe_report
 
 
 def test_is_safe_report():

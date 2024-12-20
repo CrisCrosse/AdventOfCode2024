@@ -8,7 +8,7 @@ def main():
 
 
 def get_input_from_txt_file():
-    with open('/Users/chris.rossell/projects/AdventOfCode2024/AdventOfCode2024/src/day_three/input.txt', 'r') as file:
+    with open('/day_3/input.txt', 'r') as file:
         return file.read()
 
 

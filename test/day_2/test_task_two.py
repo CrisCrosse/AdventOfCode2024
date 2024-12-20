@@ -1,5 +1,5 @@
-from day_two.task_two import is_valid_increment
-from src.day_two.task_two import is_safe_report_with_dampener
+from day_2.task_two import is_valid_increment
+from src.day_2.task_two import is_safe_report_with_dampener
 
 
 def test_safe_report_when_increasing():

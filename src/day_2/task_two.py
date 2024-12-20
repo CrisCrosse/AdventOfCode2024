@@ -1,4 +1,4 @@
-from day_two.task_one import get_reports_from_input, is_safe_report, is_increasing_increment
+from day_2.task_one import get_reports_from_input, is_safe_report, is_increasing_increment
 
 def main():
     report_values = get_reports_from_input()

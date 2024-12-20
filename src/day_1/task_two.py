@@ -1,4 +1,4 @@
-from day_one.task_one import get_sorted_lists_from_input
+from day_1.task_one import get_sorted_lists_from_input
 
 def main():
     list_1, list_2 = get_sorted_lists_from_input()
