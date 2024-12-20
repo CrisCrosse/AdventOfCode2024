@@ -62,8 +62,6 @@ def is_safe_report(report):
 
     # iterate through the list, checking the magnitude of the difference and the direction
     for index, level in enumerate(report):
-        print("value: ", level)
-        print("index: ", index)
 
         # removal cases for dampener;
         # the difference between item a and item b
