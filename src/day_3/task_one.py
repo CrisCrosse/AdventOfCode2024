@@ -8,7 +8,7 @@ def main():
 
 
 def get_input_from_txt_file():
-    with open('/day_3/input.txt', 'r') as file:
+    with open('/Users/chris.rossell/projects/AdventOfCode2024/AdventOfCode2024/src/day_3/input.txt', 'r') as file:
         return file.read()
 
 
@@ -32,3 +32,6 @@ def multiply_tuples_and_return_sum(tuple_list: [(int, int)]) -> int:
 
 if __name__ == '__main__':
     main()
+
+# 85545273
+# 174336360
