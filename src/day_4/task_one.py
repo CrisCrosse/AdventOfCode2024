@@ -1,11 +1,13 @@
-.import pandas
-
-XMAS_CHARACTERS = ['X', 'M', 'A', 'S']
+from day_4.task_one_checkers import check_forward, check_backward, check_each_diagonal, check_down, \
+    check_up
+import pandas
 
 
 def main() -> None:
     table = get_table_from_input()
     print(table)
+    xmas_counter = iterate_through_lines_and_count_xmas(table)
+    print(xmas_counter)
 
 
 def get_table_from_input() -> pandas.DataFrame:
@@ -23,7 +25,6 @@ def iterate_through_lines_and_count_xmas(table: pandas.DataFrame) -> int:
         for x_index in x_indices:
             number_of_xmas_at_position = get_number_of_xmas_at_position(table, row_number, x_index)
             xmas_counter += number_of_xmas_at_position
-            print(xmas_counter)
 
     return xmas_counter
 
@@ -42,52 +43,16 @@ def get_number_of_xmas_at_position(table: pandas.DataFrame,
         number_of_xmas_at_position += 1
     if check_backward(table, row_number, x_index):
         number_of_xmas_at_position += 1
-    if check_each_diagonal(table, row_number, x_index):
+
+    if check_up(table, row_number, x_index):
         number_of_xmas_at_position += 1
-    if check_vertical(table, row_number, x_index):
+    if check_down(table, row_number, x_index):
         number_of_xmas_at_position += 1
+
+    number_of_xmas_at_position += check_each_diagonal(table, row_number, x_index)
+
 
     return number_of_xmas_at_position
-
-
-def check_forward(table: pandas.DataFrame,
-                  row_number: int,
-                  x_index: int
-                  ) -> bool:
-    forward_slice = table.iloc[row_number, x_index:x_index + 4]
-    return forward_slice.tolist() == XMAS_CHARACTERS
-
-
-def check_backward(table: pandas.DataFrame,
-                   row_number: int,
-                   x_index: int
-                   ) -> bool:
-    backward_slice = table.iloc[row_number, x_index - 3: x_index+1]
-    backward_slice_reversed = backward_slice.tolist()[::-1]
-    return backward_slice_reversed == XMAS_CHARACTERS
-
-
-def check_each_diagonal(table: pandas.DataFrame,
-                        row_number: int,
-                        x_index: int
-                        ) -> int:
-    xmas_counter = 0
-    if check_up_left(table, row_number, x_index):
-        xmas_counter += 1
-    if check_up_right(table, row_number, x_index):
-        xmas_counter += 1
-    if check_down_left(table, row_number, x_index):
-        xmas_counter += 1
-    if check_down_right(table, row_number, x_index):
-        xmas_counter += 1
-    return xmas_counter
-
-
-def check_vertical(table: pandas.DataFrame,
-                   row_number: int,
-                   x_index: int
-                   ) -> bool:
-    return True
 
 
 if __name__ == '__main__':

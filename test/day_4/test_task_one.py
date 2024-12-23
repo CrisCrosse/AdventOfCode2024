@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pandas
 
 from src.day_4.task_one import get_table_from_input, find_all_x_in_line, \
-    iterate_through_lines_and_count_xmas, check_forward, check_backward
+    iterate_through_lines_and_count_xmas
 
 
 def test_get_table_from_input() -> None:
@@ -78,56 +78,3 @@ def test_iterate_through_lines_calls_correct_functions_multiple_x_per_line(find_
     assert actual == 6
     assert find_x_mock.call_count == 2
     assert get_number_xmas_mock.call_count == 6
-
-
-# test get number of xmas at position and lower level functions
-
-
-def test_check_forward() -> None:
-    table = pandas.DataFrame([['X', 'M', 'A', 'S'],
-                              ['S', 'X', 'S', 'M']]
-                             )
-    expected = True
-    row_number = 0
-    x_index = 0
-
-    actual = check_forward(table, row_number, x_index)
-
-    assert actual == expected
-
-def test_check_forward_where_not_4_indices_left() -> None:
-    table = pandas.DataFrame([['S', 'X', 'S', 'M'],
-                              ['S', 'X', 'S', 'M']]
-                             )
-    expected = False
-    row_number = 0
-    x_index = 1
-
-    actual = check_forward(table, row_number, x_index)
-
-    assert actual == expected
-
-
-def test_check_backward() -> None:
-    table = pandas.DataFrame([['S', 'A', 'M', 'X'],
-                              ['S', 'X', 'S', 'M']]
-                             )
-    expected = True
-    row_number = 0
-    x_index = 3
-
-    actual = check_backward(table, row_number, x_index)
-
-    assert actual == expected
-
-def test_check_backward_where_not_4_indices_left() -> None:
-    table = pandas.DataFrame([['S', 'X', 'S', 'M'],
-                              ['S', 'X', 'S', 'M']]
-                             )
-    expected = False
-    row_number = 0
-    x_index = 1
-
-    actual = check_backward(table, row_number, x_index)
-
-    assert actual == expected
