@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 import pandas
 
+from day_4.task_two import iterate_through_lines_and_count_mas_in_x_shape
 from src.day_4.task_one import get_table_from_input, find_all_x_in_line, \
     iterate_through_lines_and_count_xmas
 
