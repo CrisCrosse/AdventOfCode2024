@@ -1,3 +1,5 @@
+from typing import Hashable
+
 from pandas import DataFrame
 
 from day_6.Direction import Direction
@@ -5,29 +7,32 @@ from day_6.Direction import Direction
 
 class GuardMap:
     current_map: DataFrame
-    guard_location: tuple[int, int]
+    guard_location: tuple[Hashable, int]
     direction_of_travel: Direction
     is_on_map: bool
 
 
     def __init__(self,
                  current_map: DataFrame = None,
-                 guard_location: tuple[int, int] = None,
+                 guard_location: tuple[Hashable, int] = None,
                  direction_of_travel: Direction = Direction.UP,
                  is_on_map: bool = True
                  ):
-        if current_map:
-            self.set_current_map(current_map)
-        else:
+        if current_map is None:
             self.set_current_map(get_starting_map_from_input())
-        self.guard_location = guard_location
+        else:
+            self.set_current_map(current_map)
+        if guard_location is None:
+            self.set_guard_location(self.get_starting_guard_location_from_map())
+        else:
+            self.set_guard_location(guard_location)
         self.direction_of_travel = direction_of_travel
         self.is_on_map = is_on_map
 
     def set_current_map(self, current_map: DataFrame) -> None:
         self.current_map = current_map
 
-    def set_guard_location(self, guard_location: tuple[int, int]) -> None:
+    def set_guard_location(self, guard_location: tuple[Hashable, int]) -> None:
         self.guard_location = guard_location
 
     def set_direction_of_travel(self, direction_of_travel: Direction) -> None:
@@ -39,7 +44,7 @@ class GuardMap:
     def get_current_map(self) -> DataFrame:
         return self.current_map
 
-    def get_guard_location(self) -> tuple[int, int]:
+    def get_guard_location(self) -> tuple[Hashable, int]:
         return self.guard_location
 
     def get_direction_of_travel(self) -> Direction:
@@ -49,17 +54,20 @@ class GuardMap:
         return self.is_on_map
 
 
+    def get_starting_guard_location_from_map(self) -> tuple[Hashable, int]:
+        starting_map = self.get_current_map()
+        for row_number, row in starting_map.iterrows():
+            for column_number, column in enumerate(row):
+                    if column == "^":
+                        return row_number, int(column_number)
+        raise Exception("No guard found on map")
+
+
     def move_guard(self) -> DataFrame:
         print(self.is_on_map)
         return self.current_map
 
 
-    def get_starting_guard_location_from_map(self) -> tuple[int, int]:
-        starting_map = self.get_current_map()
-        for row_number, row in starting_map.iterrows():
-            for column_number, column in row.iteritems():
-                if column == "^":
-                    return int(row.index), int(column_number)
 
 
 def get_starting_map_from_input() -> DataFrame:
