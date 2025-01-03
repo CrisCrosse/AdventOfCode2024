@@ -45,8 +45,8 @@ def test_find_all_x_no_x() -> None:
 
 # test iterate through lines
 
-@patch('src.day_4.task_one.get_number_of_xmas_at_position')
-@patch('src.day_4.task_one.find_all_x_in_line')
+@patch('src.day_4.task_one.py.get_number_of_xmas_at_position')
+@patch('src.day_4.task_one.py.find_all_x_in_line')
 def test_iterate_through_lines_calls_correct_functions(find_x_mock,
                                                        get_number_xmas_mock
                                                        ) -> None:
@@ -63,8 +63,8 @@ def test_iterate_through_lines_calls_correct_functions(find_x_mock,
     assert get_number_xmas_mock.call_count == 2
 
 
-@patch('src.day_4.task_one.get_number_of_xmas_at_position')
-@patch('src.day_4.task_one.find_all_x_in_line')
+@patch('src.day_4.task_one.py.get_number_of_xmas_at_position')
+@patch('src.day_4.task_one.py.find_all_x_in_line')
 def test_iterate_through_lines_calls_correct_functions_multiple_x_per_line(find_x_mock,
                                                                            get_number_xmas_mock
                                                                            ) -> None:

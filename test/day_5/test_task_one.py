@@ -87,8 +87,8 @@ def test_find_middle_element_happy_path_more_elements():
     assert actual == expected
 
 @pytest.fixture
-@patch('day_5.task_one.get_update_input')
-@patch('day_5.task_one.get_rule_input')
+@patch('day_5.task_one.py.get_update_input')
+@patch('day_5.task_one.py.get_rule_input')
 def printer(mock_rules, mock_updates):
     mock_rules.return_value = [(32, 75), (18, 19)]
     mock_updates.return_value = [[32, 75, 50, 18, 19]]
@@ -114,8 +114,8 @@ def test_count_updates_happy_path(printer):
     assert actual == expected
 
 
-@patch('day_5.task_one.get_update_input')
-@patch('day_5.task_one.get_rule_input')
+@patch('day_5.task_one.py.get_update_input')
+@patch('day_5.task_one.py.get_rule_input')
 def test_count_updates_does_not_count_invalid(mock_rules,
                                                                           mock_updates):
     mock_rules.return_value = [(32, 75), (18, 19)]
