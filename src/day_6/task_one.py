@@ -1,20 +1,17 @@
-from typing import Hashable
-
 from pandas import DataFrame
-
 from day_6.Direction import Direction
 
 
 class GuardMap:
     current_map: DataFrame
-    guard_location: tuple[Hashable, int]
+    guard_location: tuple[int, int]
     direction_of_travel: Direction
     is_on_map: bool
 
 
     def __init__(self,
                  current_map: DataFrame = None,
-                 guard_location: tuple[Hashable, int] = None,
+                 guard_location: tuple[int, int] = None,
                  direction_of_travel: Direction = Direction.UP,
                  is_on_map: bool = True
                  ):
@@ -32,7 +29,7 @@ class GuardMap:
     def set_current_map(self, current_map: DataFrame) -> None:
         self.current_map = current_map
 
-    def set_guard_location(self, guard_location: tuple[Hashable, int]) -> None:
+    def set_guard_location(self, guard_location: tuple[int, int]) -> None:
         self.guard_location = guard_location
 
     def set_direction_of_travel(self, direction_of_travel: Direction) -> None:
@@ -44,7 +41,7 @@ class GuardMap:
     def get_current_map(self) -> DataFrame:
         return self.current_map
 
-    def get_guard_location(self) -> tuple[Hashable, int]:
+    def get_guard_location(self) -> tuple[int, int]:
         return self.guard_location
 
     def get_direction_of_travel(self) -> Direction:
@@ -54,7 +51,7 @@ class GuardMap:
         return self.is_on_map
 
 
-    def get_starting_guard_location_from_map(self) -> tuple[Hashable, int]:
+    def get_starting_guard_location_from_map(self) -> tuple[int, int]:
         starting_map = self.get_current_map()
         for row_number, row in starting_map.iterrows():
             for column_number, column in enumerate(row):
@@ -63,9 +60,48 @@ class GuardMap:
         raise Exception("No guard found on map")
 
 
-    def move_guard(self) -> DataFrame:
-        print(self.is_on_map)
-        return self.current_map
+    def move_guard_until_leaves_grid(self):
+        while self.is_on_map:
+            self.set_current_map(self.move_or_rotate_guard())
+            self.get_current_map().show()
+
+
+    def move_or_rotate_guard(self) -> DataFrame:
+        pass
+        # if up:
+        #     return self.move_guard_up_one_space()
+        # if right:
+        #     return self.move_guard_right_one_space()
+        # if left:
+        #     return self.move_guard_left_one_space()
+        # if down:
+        #     return self.move_guard_down_one_space()
+
+        # in each case, the current guard location is marked as X and the next is marked as ^
+        # in each case, if next move is # rotate instead
+        # in each case, if next move exceeds grid, mark current as X and set is_on_map to False
+
+    def go_up_or_rotate(self) -> DataFrame:
+        new_map = self.get_current_map()
+        guard_location = self.get_guard_location()
+        next_guard_location = (guard_location[0] - 1, guard_location[1])
+
+        if next_guard_location[0] < 0:
+            new_map.iloc[guard_location] = "X"
+            self.set_is_on_map(False)
+            return new_map
+
+        if new_map.iloc[next_guard_location] == "#":
+            new_map.iloc[guard_location] = ">"
+            self.set_direction_of_travel(Direction.RIGHT)
+            return new_map
+
+        new_map.iloc[guard_location] = "X"
+        new_map.iloc[next_guard_location] = "^"
+        self.set_guard_location(next_guard_location)
+        return new_map
+
+
 
 
 

@@ -47,7 +47,7 @@ def test_get_starting_guard_location_raises_error_when_no_carat() -> None:
         GuardMap(current_map)
 
 
-def test_move_guard_up_one_space():
+def test_go_up():
     current_map = DataFrame(
         [
             [".", ".", ".", "."],
@@ -64,7 +64,12 @@ def test_move_guard_up_one_space():
             [".", ".", "X", "."]
         ]
     )
-    actual = move_guard(current_map, (3, 2), Direction.UP, True)
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(3,2),
+                         direction_of_travel=Direction.UP,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_up_or_rotate()
     assert actual.equals(expected_map)
 
 def test_move_guard_turn_to_right():
