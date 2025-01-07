@@ -146,6 +146,26 @@ class GuardMap:
         self.set_guard_location(next_guard_location)
         return new_map
 
+    def go_left_or_rotate(self) -> DataFrame:
+        new_map = self.get_current_map()
+        guard_location = self.get_guard_location()
+        next_guard_location = (guard_location[0] , guard_location[1] - 1)
+
+        if next_guard_location[1] < 0:
+            new_map.iloc[guard_location] = "X"
+            self.set_is_on_map(False)
+            return new_map
+
+        if new_map.iloc[next_guard_location] == "#":
+            new_map.iloc[guard_location] = "^"
+            self.set_direction_of_travel(Direction.UP)
+            return new_map
+
+        new_map.iloc[guard_location] = "X"
+        new_map.iloc[next_guard_location] = "<"
+        self.set_guard_location(next_guard_location)
+        return new_map
+
 
 
 
