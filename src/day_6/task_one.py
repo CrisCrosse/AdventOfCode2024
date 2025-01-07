@@ -5,6 +5,7 @@ from day_6.Direction import Direction
 class GuardMap:
     current_map: DataFrame
     guard_location: tuple[int, int]
+    # guard_location: (y co-ord or row index, x co-ord or column index) OPPOSITE TO conventional maths
     direction_of_travel: Direction
     is_on_map: bool
 
@@ -101,6 +102,49 @@ class GuardMap:
         self.set_guard_location(next_guard_location)
         return new_map
 
+
+    def go_right_or_rotate(self) -> DataFrame:
+        new_map = self.get_current_map()
+        guard_location = self.get_guard_location()
+        next_guard_location = (guard_location[0], guard_location[1] + 1)
+        max_x_index = new_map.shape[1]
+
+        if next_guard_location[1] >= max_x_index:
+            new_map.iloc[guard_location] = "X"
+            self.set_is_on_map(False)
+            return new_map
+
+        if new_map.iloc[next_guard_location] == "#":
+            new_map.iloc[guard_location] = "v"
+            self.set_direction_of_travel(Direction.DOWN)
+            return new_map
+
+        new_map.iloc[guard_location] = "X"
+        new_map.iloc[next_guard_location] = ">"
+        self.set_guard_location(next_guard_location)
+        return new_map
+
+
+    def go_down_or_rotate(self) -> DataFrame:
+        new_map = self.get_current_map()
+        guard_location = self.get_guard_location()
+        next_guard_location = (guard_location[0] + 1, guard_location[1])
+        max_y_index = new_map.shape[0]
+
+        if next_guard_location[0] >= max_y_index:
+            new_map.iloc[guard_location] = "X"
+            self.set_is_on_map(False)
+            return new_map
+
+        if new_map.iloc[next_guard_location] == "#":
+            new_map.iloc[guard_location] = "<"
+            self.set_direction_of_travel(Direction.LEFT)
+            return new_map
+
+        new_map.iloc[guard_location] = "X"
+        new_map.iloc[next_guard_location] = "v"
+        self.set_guard_location(next_guard_location)
+        return new_map
 
 
 

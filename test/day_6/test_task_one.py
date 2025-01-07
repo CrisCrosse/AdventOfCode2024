@@ -89,7 +89,12 @@ def test_move_guard_turn_to_right():
             [".", ".", ".", "."]
         ]
     )
-    actual = move_guard(current_map, (1, 2), Direction.UP, True)
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.UP,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_up_or_rotate()
     assert actual.equals(expected_map)
 
 
@@ -110,7 +115,12 @@ def test_move_guard_move_to_right():
             [".", ".", ".", "."]
         ]
     )
-    actual = move_guard(current_map, (1, 2), Direction.RIGHT, True)
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.RIGHT,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_right_or_rotate()
     assert actual.equals(expected_map)
 
 def test_move_guard_turn_to_down():
@@ -130,7 +140,38 @@ def test_move_guard_turn_to_down():
             [".", ".", ".", "."]
         ]
     )
-    actual = move_guard(current_map, (1, 2), Direction.RIGHT, True)
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.RIGHT,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_right_or_rotate()
+    assert actual.equals(expected_map)
+
+
+def test_move_guard_down():
+    current_map = DataFrame(
+        [
+            [".", ".", ".", "."],
+            [".", ".", "v", "."],
+            [".", ".", ".", "."],
+            [".", ".", ".", "."]
+        ]
+    )
+    expected_map = DataFrame(
+        [
+            [".", ".", ".", "."],
+            [".", ".", "X", "."],
+            [".", ".", "v", "."],
+            [".", ".", ".", "."]
+        ]
+    )
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.DOWN,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_down_or_rotate()
     assert actual.equals(expected_map)
 
 
@@ -151,8 +192,15 @@ def test_move_guard_turn_to_left():
             [".", ".", ".", "."]
         ]
     )
-    actual = move_guard(current_map, (1, 2), Direction.DOWN, True)
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.DOWN,
+                         is_on_map=True
+                         )
+    actual = guard_map.go_down_or_rotate()
     assert actual.equals(expected_map)
+    assert guard_map.get_direction_of_travel() == Direction.LEFT
+
 
 
 def test_move_guard_turn_to_up():
