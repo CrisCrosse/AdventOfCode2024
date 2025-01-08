@@ -1,6 +1,6 @@
 import pytest
 from pandas import DataFrame
-from day_6.task_one import move_guard, get_starting_map_from_input, GuardMap
+from day_6.task_one import get_starting_map_from_input, GuardMap, count_x_in_df
 from day_6.Direction import Direction
 
 
@@ -363,4 +363,73 @@ def test_move_guard_leaves_grid_to_left():
     actual = guard_map.go_left_or_rotate()
     assert actual.equals(expected_map)
     assert guard_map.is_on_map == False
+# could test different sizes of grid
+
+
+def test_move_guard_until_leaves_grid():
+    current_map = DataFrame(
+        [
+            [".", ".", ".", "."],
+            [".", ".", "^", "."],
+            [".", ".", ".", "."],
+            [".", ".", ".", "."]
+        ]
+    )
+    expected = DataFrame(
+        [
+            [".", ".", "X", "."],
+            [".", ".", "X", "."],
+            [".", ".", ".", "."],
+            [".", ".", ".", "."]
+        ]
+    )
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(1, 2),
+                         direction_of_travel=Direction.UP,
+                         is_on_map=True
+                         )
+    actual = guard_map.move_guard_until_leaves_grid()
+    assert actual.equals(expected)
+
+
+def test_move_guard_until_leaves_grid_with_turns():
+    current_map = DataFrame(
+        [
+            [">", ".", "#", "."],
+            [".", ".", ".", "."],
+            [".", ".", ".", "."],
+            [".", "#", ".", "."]
+        ]
+    )
+    expected = DataFrame(
+        [
+            ["X", "X", "#", "."],
+            [".", "X", ".", "."],
+            ["X", "X", ".", "."],
+            [".", "#", ".", "."]
+        ]
+    )
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(0, 0),
+                         direction_of_travel=Direction.RIGHT,
+                         is_on_map=True
+                         )
+    actual = guard_map.move_guard_until_leaves_grid()
+    assert actual.equals(expected)
+
+
+def test_count_x_in_df():
+    finished_map = DataFrame(
+        [
+            ["X", "X", "#", "."],
+            [".", "X", ".", "."],
+            ["X", "X", ".", "."],
+            [".", "#", ".", "."]
+        ]
+    )
+    expected = 5
+    actual = count_x_in_df(finished_map)
+    assert actual == expected
+
+# test where crossing over existing trail
 

@@ -64,23 +64,19 @@ class GuardMap:
     def move_guard_until_leaves_grid(self):
         while self.is_on_map:
             self.set_current_map(self.move_or_rotate_guard())
-            self.get_current_map().show()
+            map_for_viewing = self.get_current_map()
+        return self.get_current_map()
 
 
     def move_or_rotate_guard(self) -> DataFrame:
-        pass
-        # if up:
-        #     return self.move_guard_up_one_space()
-        # if right:
-        #     return self.move_guard_right_one_space()
-        # if left:
-        #     return self.move_guard_left_one_space()
-        # if down:
-        #     return self.move_guard_down_one_space()
-
-        # in each case, the current guard location is marked as X and the next is marked as ^
-        # in each case, if next move is # rotate instead
-        # in each case, if next move exceeds grid, mark current as X and set is_on_map to False
+        if self.direction_of_travel == Direction.UP:
+            return self.go_up_or_rotate()
+        if self.direction_of_travel == Direction.RIGHT:
+            return self.go_right_or_rotate()
+        if self.direction_of_travel == Direction.LEFT:
+            return self.go_left_or_rotate()
+        if self.direction_of_travel == Direction.DOWN:
+            return self.go_down_or_rotate()
 
     def go_up_or_rotate(self) -> DataFrame:
         new_map = self.get_current_map()
@@ -167,9 +163,6 @@ class GuardMap:
         return new_map
 
 
-
-
-
 def get_starting_map_from_input() -> DataFrame:
     with open('/Users/chris.rossell/projects/AdventOfCode2024/AdventOfCode2024/src/day_6/input.txt') as f:
         lines = f.readlines()
@@ -177,7 +170,14 @@ def get_starting_map_from_input() -> DataFrame:
     return DataFrame(lines_split_by_char)
 
 
+def count_x_in_df(df: DataFrame) -> int:
+    return df.apply(lambda x: x.str.count("X")).sum().sum()
 
-def move_guard(current_map: DataFrame, guard_location: tuple[int, int], direction_of_travel: Direction, is_on_map: bool) -> DataFrame:
-    print(is_on_map)
-    return current_map
+
+if __name__ == "__main__":
+    guard_map = GuardMap()
+    guard_map.move_guard_until_leaves_grid()
+    map_where_guard_left = guard_map.get_current_map()
+    print(count_x_in_df(map_where_guard_left))
+
+
