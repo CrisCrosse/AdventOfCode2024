@@ -1,14 +1,13 @@
 from pandas import DataFrame
 from day_6.Direction import Direction
+from day_6.task_one_helpers import get_next_set_of_map_features
 
 
 class GuardMap:
     current_map: DataFrame
-    guard_location: tuple[int, int]
-    # guard_location: (y co-ord or row index, x co-ord or column index) OPPOSITE TO conventional maths
+    guard_location: tuple[int, int]  # (y co-ord or row index, x co-ord or column index) OPPOSITE TO conventional maths
     direction_of_travel: Direction
     is_on_map: bool
-
 
     def __init__(self,
                  current_map: DataFrame = None,
@@ -51,116 +50,45 @@ class GuardMap:
     def get_is_on_map(self) -> bool:
         return self.is_on_map
 
+    def get_map_properties_other_than_on_map(self) -> tuple[DataFrame, tuple[int, int], Direction]:
+        return (
+            self.get_current_map(),
+            self.get_guard_location(),
+            self.get_direction_of_travel(),
+        )
+
+    def set_map_properties(self,
+                           new_map: DataFrame,
+                           new_guard_location: tuple[int, int],
+                           new_direction_of_travel: Direction,
+                           is_on_map: bool
+                           ) -> None:
+        self.set_current_map(new_map)
+        self.set_guard_location(new_guard_location)
+        self.set_direction_of_travel(new_direction_of_travel)
+        self.set_is_on_map(is_on_map)
 
     def get_starting_guard_location_from_map(self) -> tuple[int, int]:
         starting_map = self.get_current_map()
         for row_number, row in starting_map.iterrows():
             for column_number, column in enumerate(row):
-                    if column == "^":
-                        return row_number, int(column_number)
+                if column == "^":
+                    return row_number, int(column_number)
         raise Exception("No guard found on map")
-
 
     def move_guard_until_leaves_grid(self):
         while self.is_on_map:
-            self.set_current_map(self.move_or_rotate_guard())
+            self.get_next_map_position_and_update_self()
             map_for_viewing = self.get_current_map()
         return self.get_current_map()
 
-
-    def move_or_rotate_guard(self) -> DataFrame:
-        if self.direction_of_travel == Direction.UP:
-            return self.go_up_or_rotate()
-        if self.direction_of_travel == Direction.RIGHT:
-            return self.go_right_or_rotate()
-        if self.direction_of_travel == Direction.LEFT:
-            return self.go_left_or_rotate()
-        if self.direction_of_travel == Direction.DOWN:
-            return self.go_down_or_rotate()
-
-    def go_up_or_rotate(self) -> DataFrame:
-        new_map = self.get_current_map()
-        guard_location = self.get_guard_location()
-        next_guard_location = (guard_location[0] - 1, guard_location[1])
-
-        if next_guard_location[0] < 0:
-            new_map.iloc[guard_location] = "X"
-            self.set_is_on_map(False)
-            return new_map
-
-        if new_map.iloc[next_guard_location] == "#":
-            new_map.iloc[guard_location] = ">"
-            self.set_direction_of_travel(Direction.RIGHT)
-            return new_map
-
-        new_map.iloc[guard_location] = "X"
-        new_map.iloc[next_guard_location] = "^"
-        self.set_guard_location(next_guard_location)
-        return new_map
-
-
-    def go_right_or_rotate(self) -> DataFrame:
-        new_map = self.get_current_map()
-        guard_location = self.get_guard_location()
-        next_guard_location = (guard_location[0], guard_location[1] + 1)
-        max_x_index = new_map.shape[1]
-
-        if next_guard_location[1] >= max_x_index:
-            new_map.iloc[guard_location] = "X"
-            self.set_is_on_map(False)
-            return new_map
-
-        if new_map.iloc[next_guard_location] == "#":
-            new_map.iloc[guard_location] = "v"
-            self.set_direction_of_travel(Direction.DOWN)
-            return new_map
-
-        new_map.iloc[guard_location] = "X"
-        new_map.iloc[next_guard_location] = ">"
-        self.set_guard_location(next_guard_location)
-        return new_map
-
-
-    def go_down_or_rotate(self) -> DataFrame:
-        new_map = self.get_current_map()
-        guard_location = self.get_guard_location()
-        next_guard_location = (guard_location[0] + 1, guard_location[1])
-        max_y_index = new_map.shape[0]
-
-        if next_guard_location[0] >= max_y_index:
-            new_map.iloc[guard_location] = "X"
-            self.set_is_on_map(False)
-            return new_map
-
-        if new_map.iloc[next_guard_location] == "#":
-            new_map.iloc[guard_location] = "<"
-            self.set_direction_of_travel(Direction.LEFT)
-            return new_map
-
-        new_map.iloc[guard_location] = "X"
-        new_map.iloc[next_guard_location] = "v"
-        self.set_guard_location(next_guard_location)
-        return new_map
-
-    def go_left_or_rotate(self) -> DataFrame:
-        new_map = self.get_current_map()
-        guard_location = self.get_guard_location()
-        next_guard_location = (guard_location[0] , guard_location[1] - 1)
-
-        if next_guard_location[1] < 0:
-            new_map.iloc[guard_location] = "X"
-            self.set_is_on_map(False)
-            return new_map
-
-        if new_map.iloc[next_guard_location] == "#":
-            new_map.iloc[guard_location] = "^"
-            self.set_direction_of_travel(Direction.UP)
-            return new_map
-
-        new_map.iloc[guard_location] = "X"
-        new_map.iloc[next_guard_location] = "<"
-        self.set_guard_location(next_guard_location)
-        return new_map
+    def get_next_map_position_and_update_self(self) -> None:
+        self.set_map_properties(
+            *get_next_set_of_map_features(self.get_current_map(),
+                                          self.get_guard_location(),
+                                          self.get_direction_of_travel()
+                                          )
+        )
 
 
 def get_starting_map_from_input() -> DataFrame:
@@ -179,5 +107,3 @@ if __name__ == "__main__":
     guard_map.move_guard_until_leaves_grid()
     map_where_guard_left = guard_map.get_current_map()
     print(count_x_in_df(map_where_guard_left))
-
-

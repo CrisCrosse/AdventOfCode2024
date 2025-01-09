@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 from pandas import DataFrame
 from day_6.task_one import get_starting_map_from_input, GuardMap, count_x_in_df
@@ -45,325 +47,6 @@ def test_get_starting_guard_location_raises_error_when_no_carat() -> None:
     )
     with pytest.raises(Exception):
         GuardMap(current_map)
-
-
-def test_go_up():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", "^", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", "^", "."],
-            [".", ".", "X", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(3,2),
-                         direction_of_travel=Direction.UP,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_up_or_rotate()
-    assert actual.equals(expected_map)
-
-def test_move_guard_turn_to_right():
-    current_map = DataFrame(
-        [
-            [".", ".", "#", "."],
-            [".", ".", "^", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", "#", "."],
-            [".", ".", ">", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.UP,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_up_or_rotate()
-    assert actual.equals(expected_map)
-
-
-def test_move_guard_leaves_grid_to_top():
-    current_map = DataFrame(
-        [
-            [".", ".", "^", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", "X", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(0, 2),
-                         direction_of_travel=Direction.UP,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_up_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.is_on_map == False
-
-
-def test_move_guard_move_to_right():
-    current_map = DataFrame(
-        [
-            [".", ".", "#", "."],
-            [".", ".", ">", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", "#", "."],
-            [".", ".", "X", ">"],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.RIGHT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_right_or_rotate()
-    assert actual.equals(expected_map)
-
-
-def test_move_guard_leaves_grid_to_right():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", ">"],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", "X"],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 3),
-                         direction_of_travel=Direction.RIGHT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_right_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.is_on_map == False
-
-
-def test_move_guard_turn_to_down():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ">", "#"],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "v", "#"],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.RIGHT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_right_or_rotate()
-    assert actual.equals(expected_map)
-
-
-def test_move_guard_down():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "v", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "X", "."],
-            [".", ".", "v", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.DOWN,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_down_or_rotate()
-    assert actual.equals(expected_map)
-
-
-
-def test_move_guard_turn_to_left():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "v", "."],
-            [".", ".", "#", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "<", "."],
-            [".", ".", "#", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.DOWN,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_down_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.get_direction_of_travel() == Direction.LEFT
-
-
-def test_move_guard_leaves_grid_to_bottom():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", "v", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", "X", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(3, 2),
-                         direction_of_travel=Direction.DOWN,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_down_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.is_on_map == False
-
-
-def test_move_guard_left():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", ".", "<", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", "<", "X", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.LEFT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_left_or_rotate()
-    assert actual.equals(expected_map)
-
-
-def test_move_guard_turn_to_up():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", "#", "<", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            [".", "#", "^", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 2),
-                         direction_of_travel=Direction.LEFT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_left_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.get_direction_of_travel() == Direction.UP
-
-
-def test_move_guard_leaves_grid_to_left():
-    current_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            ["<", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    expected_map = DataFrame(
-        [
-            [".", ".", ".", "."],
-            ["X", ".", ".", "."],
-            [".", ".", ".", "."],
-            [".", ".", ".", "."]
-        ]
-    )
-    guard_map = GuardMap(current_map=current_map,
-                         guard_location=(1, 0),
-                         direction_of_travel=Direction.LEFT,
-                         is_on_map=True
-                         )
-    actual = guard_map.go_left_or_rotate()
-    assert actual.equals(expected_map)
-    assert guard_map.is_on_map == False
-# could test different sizes of grid
 
 
 def test_move_guard_until_leaves_grid():
@@ -431,5 +114,42 @@ def test_count_x_in_df():
     actual = count_x_in_df(finished_map)
     assert actual == expected
 
-# test where crossing over existing trail
+
+@patch("day_6.task_one.GuardMap.set_map_properties")
+@patch("day_6.task_one.GuardMap.get_next_set_of_map_features")
+def test_get_next_map_position_and_update_self(get_next_features_mock,
+                                               set_map_properties_mock
+                                               ):
+    current_map_features = (
+        DataFrame(
+            [
+                [".", ">", ".", "."],
+                [".", ".", ".", "."],
+                [".", ".", ".", "."],
+                [".", ".", ".", "."]
+            ]
+        ),
+        (0, 1),
+        Direction.RIGHT,
+        False
+    )
+
+    next_map_features = (
+        DataFrame(
+            [
+                [".", "X", ">", "."],
+                [".", ".", ".", "."],
+                [".", ".", ".", "."],
+                [".", ".", ".", "."]
+            ]
+        ),
+        (0, 2),
+        Direction.RIGHT,
+        False
+    )
+    get_next_features_mock.return_value = next_map_features
+
+    GuardMap.get_next_map_position_and_update_self()
+    pass
+
 
