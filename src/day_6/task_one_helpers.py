@@ -66,3 +66,13 @@ def is_next_guard_location_out_of_bounds(next_guard_location: tuple[int, int], c
     out_of_bounds_to_left = next_guard_location[1] < 0
     return  out_of_bounds_to_top or out_of_bounds_to_right or out_of_bounds_to_bottom or out_of_bounds_to_left
 
+
+def get_starting_map_from_input() -> DataFrame:
+    with open('/Users/chris.rossell/projects/AdventOfCode2024/AdventOfCode2024/src/day_6/input.txt') as f:
+        lines = f.readlines()
+    lines_split_by_char = [list(line.strip()) for line in lines]
+    return DataFrame(lines_split_by_char)
+
+
+def count_x_in_df(df: DataFrame) -> int:
+    return df.apply(lambda x: x.str.count("X")).sum().sum()

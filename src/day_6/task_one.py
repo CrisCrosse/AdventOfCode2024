@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from day_6.Direction import Direction
-from day_6.task_one_helpers import get_next_set_of_map_features
+from day_6.task_one_helpers import get_next_set_of_map_features, get_starting_map_from_input, count_x_in_df
 
 
 class GuardMap:
@@ -50,7 +50,7 @@ class GuardMap:
     def get_is_on_map(self) -> bool:
         return self.is_on_map
 
-    def get_map_properties_other_than_on_map(self) -> tuple[DataFrame, tuple[int, int], Direction]:
+    def get_map_properties_other_than_is_on_map(self) -> tuple[DataFrame, tuple[int, int], Direction]:
         return (
             self.get_current_map(),
             self.get_guard_location(),
@@ -84,22 +84,8 @@ class GuardMap:
 
     def get_next_map_position_and_update_self(self) -> None:
         self.set_map_properties(
-            *get_next_set_of_map_features(self.get_current_map(),
-                                          self.get_guard_location(),
-                                          self.get_direction_of_travel()
-                                          )
+            *get_next_set_of_map_features(*self.get_map_properties_other_than_is_on_map())
         )
-
-
-def get_starting_map_from_input() -> DataFrame:
-    with open('/Users/chris.rossell/projects/AdventOfCode2024/AdventOfCode2024/src/day_6/input.txt') as f:
-        lines = f.readlines()
-    lines_split_by_char = [list(line.strip()) for line in lines]
-    return DataFrame(lines_split_by_char)
-
-
-def count_x_in_df(df: DataFrame) -> int:
-    return df.apply(lambda x: x.str.count("X")).sum().sum()
 
 
 if __name__ == "__main__":
@@ -107,3 +93,4 @@ if __name__ == "__main__":
     guard_map.move_guard_until_leaves_grid()
     map_where_guard_left = guard_map.get_current_map()
     print(count_x_in_df(map_where_guard_left))
+# correct answer: 5312

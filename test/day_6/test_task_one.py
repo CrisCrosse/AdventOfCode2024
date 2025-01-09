@@ -2,24 +2,8 @@ from unittest.mock import patch
 
 import pytest
 from pandas import DataFrame
-from day_6.task_one import get_starting_map_from_input, GuardMap, count_x_in_df
+from day_6.task_one import GuardMap
 from day_6.Direction import Direction
-
-
-def test_get_starting_map_from_input() -> None:
-    actual = get_starting_map_from_input()
-
-    assert isinstance(actual, DataFrame)
-    assert actual.shape == (130, 130)
-
-    first_row = actual.iloc[0]
-    first_nine_items_from_first_row = list(first_row[:9])
-    assert first_nine_items_from_first_row == [".", ".", ".", ".", ".", "#", ".", ".", "#"]
-
-    for row_number, row in actual.iterrows():
-        for column_number, value in enumerate(row):
-            if value == "X":
-                raise Exception("Should be No X present in start map")
 
 
 def test_get_starting_guard_location_from_map() -> None:
@@ -101,26 +85,14 @@ def test_move_guard_until_leaves_grid_with_turns():
     assert actual.equals(expected)
 
 
-def test_count_x_in_df():
-    finished_map = DataFrame(
-        [
-            ["X", "X", "#", "."],
-            [".", "X", ".", "."],
-            ["X", "X", ".", "."],
-            [".", "#", ".", "."]
-        ]
-    )
-    expected = 5
-    actual = count_x_in_df(finished_map)
-    assert actual == expected
-
-
 @patch("day_6.task_one.GuardMap.set_map_properties")
-@patch("day_6.task_one.GuardMap.get_next_set_of_map_features")
-def test_get_next_map_position_and_update_self(get_next_features_mock,
-                                               set_map_properties_mock
-                                               ):
-    current_map_features = (
+@patch("day_6.task_one.get_next_set_of_map_features")
+@patch("day_6.task_one.GuardMap.get_map_properties_other_than_is_on_map")
+def test_get_next_map_position_and_update_self_calls_correct_functions_with_correct_args(get_map_properties_mock,
+                                                                                         get_next_features_mock,
+                                                                                         set_map_properties_mock
+                                                                                         ):
+    returned_current_map_properties = (
         DataFrame(
             [
                 [".", ">", ".", "."],
@@ -130,9 +102,9 @@ def test_get_next_map_position_and_update_self(get_next_features_mock,
             ]
         ),
         (0, 1),
-        Direction.RIGHT,
-        False
+        Direction.RIGHT
     )
+    get_map_properties_mock.return_value = returned_current_map_properties
 
     next_map_features = (
         DataFrame(
@@ -145,11 +117,15 @@ def test_get_next_map_position_and_update_self(get_next_features_mock,
         ),
         (0, 2),
         Direction.RIGHT,
-        False
+        True
     )
     get_next_features_mock.return_value = next_map_features
 
-    GuardMap.get_next_map_position_and_update_self()
-    pass
+    test_map = GuardMap()
+    test_map.get_next_map_position_and_update_self()
 
+    get_next_features_mock.assert_called_once()
+    get_next_features_mock.assert_called_with(*returned_current_map_properties)
 
+    set_map_properties_mock.assert_called_once()
+    set_map_properties_mock.assert_called_with(*next_map_features)

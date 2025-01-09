@@ -2,7 +2,7 @@ import pytest
 from pandas import DataFrame
 from day_6.Direction import Direction
 from day_6.task_one_helpers import rotate_90_degrees_clockwise, get_next_guard_location, \
-    is_next_guard_location_out_of_bounds, get_next_set_of_map_features
+     is_next_guard_location_out_of_bounds, get_next_set_of_map_features, get_starting_map_from_input, count_x_in_df
 
 
 def test_rotate_90_degrees_clockwise_up():
@@ -399,3 +399,31 @@ def test_move_guard_leaves_grid_to_left():
 # could test different sizes of grid
 
 
+def test_get_starting_map_from_input() -> None:
+    actual = get_starting_map_from_input()
+
+    assert isinstance(actual, DataFrame)
+    assert actual.shape == (130, 130)
+
+    first_row = actual.iloc[0]
+    first_nine_items_from_first_row = list(first_row[:9])
+    assert first_nine_items_from_first_row == [".", ".", ".", ".", ".", "#", ".", ".", "#"]
+
+    for row_number, row in actual.iterrows():
+        for column_number, value in enumerate(row):
+            if value == "X":
+                raise Exception("Should be No X present in start map")
+
+
+def test_count_x_in_df():
+    finished_map = DataFrame(
+        [
+            ["X", "X", "#", "."],
+            [".", "X", ".", "."],
+            ["X", "X", ".", "."],
+            [".", "#", ".", "."]
+        ]
+    )
+    expected = 5
+    actual = count_x_in_df(finished_map)
+    assert actual == expected
