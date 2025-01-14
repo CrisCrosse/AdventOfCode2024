@@ -1,4 +1,5 @@
 from day_6.Direction import Direction
+from day_6.task_one_helpers import rotate_90_degrees_clockwise
 from day_6.task_two_helpers import clockwise_slice_contains_previously_hit_blocker, guard_is_not_about_to_leave_map
 # the smallest part of the problem is:
 # finding places along the guard path
@@ -34,6 +35,37 @@ class GuardMapWithBlockerPlacement(GuardMap):
                 map_to_view = self.get_current_map()
                 self.set_potential_loop_count(new_loop_count)
         return self.get_current_map()
+
+
+class GuardMapLoopChecker(GuardMap):
+    is_back_at_start_point: bool
+    start_point: tuple[int, int]
+    def __init__(self, current_map, guard_location, direction_of_travel, is_on_map):
+        super().__init__(current_map, guard_location, direction_of_travel, is_on_map)
+        self.is_back_at_start_point = False
+        self.start_point = guard_location
+        # check if a blocker was placed ahead causing a 90 degree turn
+        self.direction_of_travel = rotate_90_degrees_clockwise(direction_of_travel)
+
+    def get_is_back_at_start_point(self):
+        return self.is_back_at_start_point
+
+    def set_is_back_at_start_point(self, is_back_at_start_point):
+        self.is_back_at_start_point = is_back_at_start_point
+
+    def get_start_point(self):
+        return self.start_point
+
+    def guard_is_back_at_start(self):
+        return self.get_guard_location() == self.get_start_point()
+
+
+    def guard_will_return_to_start_point(self):
+        while self.is_on_map:
+            self.get_next_map_position_and_update_self()
+            if self.guard_is_back_at_start() & guard_is_not_about_to_leave_map(*self.get_map_properties_other_than_is_on_map()):
+                return True
+        return False
 
 
 def main():

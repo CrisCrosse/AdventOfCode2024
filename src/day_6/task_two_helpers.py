@@ -52,6 +52,7 @@ def guard_is_not_about_to_leave_map(current_map, current_guard_location, current
     return not guard_is_about_to_leave_map(current_map, current_guard_location, current_direction)
 
 
+# think this is unneccessary, if the next move was a blocker and it satisfies next perpendicular slice is hit blocker then it is in a loop,?
 def next_move_is_blocker(current_map, guard_location, direction_of_travel):
     next_guard_location = get_next_guard_location(guard_location, direction_of_travel)
     return current_map.iloc[next_guard_location] == "#"
