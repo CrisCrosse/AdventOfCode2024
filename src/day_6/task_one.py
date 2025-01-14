@@ -19,10 +19,10 @@ class GuardMap:
             self.set_current_map(get_starting_map_from_input())
         else:
             self.set_current_map(current_map)
-        if guard_location is None:
-            self.set_guard_location(self.get_starting_guard_location_from_map())
-        else:
+        if guard_location:
             self.set_guard_location(guard_location)
+        else:
+            self.set_guard_location(self.get_starting_guard_location_from_map())
         self.direction_of_travel = direction_of_travel
         self.is_on_map = is_on_map
 

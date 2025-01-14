@@ -129,3 +129,41 @@ def test_get_next_map_position_and_update_self_calls_correct_functions_with_corr
 
     set_map_properties_mock.assert_called_once()
     set_map_properties_mock.assert_called_with(*next_map_features)
+
+
+def test_move_guard_until_leaves_grid_from_example():
+    current_map = DataFrame(
+        [
+            [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+            [".", ".", ".", ".", ".", ".", ".", ".", ".", "#"],
+            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+            [".", ".", "#", ".", ".", ".", ".", ".", ".", "."],
+            [".", ".", ".", ".", ".", ".", ".", "#", ".", "."],
+            [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+            [".", "#", ".", ".", "^", ".", ".", ".", ".", "."],
+            [".", ".", ".", ".", ".", ".", ".", ".", "#", "."],
+            ["#", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+            [".", ".", ".", ".", ".", ".", "#", ".", ".", "."]
+        ]
+    )
+    expected = DataFrame(
+        [
+            [".", ".", ".", ".", "#", ".", ".", ".", ".", "."],
+            [".", ".", ".", ".", "X", "X", "X", "X", "X", "#"],
+            [".", ".", ".", ".", "X", ".", ".", ".", "X", "."],
+            [".", ".", "#", ".", "X", ".", ".", ".", "X", "."],
+            [".", ".", "X", "X", "X", "X", "X", "#", "X", "."],
+            [".", ".", "X", ".", "X", ".", "X", ".", "X", "."],
+            [".", "#", "X", "X", "X", "X", "X", "X", "X", "."],
+            [".", "X", "X", "X", "X", "X", "X", "X", "#", "."],
+            ["#", "X", "X", "X", "X", "X", "X", "X", ".", "."],
+            [".", ".", ".", ".", ".", ".", "#", "X", ".", "."]
+        ]
+    )
+    guard_map = GuardMap(current_map=current_map,
+                         guard_location=(6, 4),
+                         direction_of_travel=Direction.UP,
+                         is_on_map=True
+                         )
+    actual = guard_map.move_guard_until_leaves_grid()
+    assert actual.equals(expected)
