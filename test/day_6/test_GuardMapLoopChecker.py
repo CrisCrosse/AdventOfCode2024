@@ -78,6 +78,32 @@ def test_loop_checker_hits_an_obstacle_and_leaves():
 
 
 
+def test_loop_checker_hits_two_obstacles_and_leaves():
+    current_map = DataFrame(
+        [
+            [".",".", "#", ".", ".", ".", ".", ".", ".", ".", "."],
+            [".",".", "X", "X", ">", "Y", ".", ".", ".", ".", "."],
+            [".",".", "X", ".", ".", ".", ".", ".", ".", ".", "."],
+            ["#",".", "X", "X", "X", "X", "X", "#", ".", ".", "."],
+            [".",".", "X", ".", "#", ".", "X", ".", ".", ".", "."],
+            [".","#", "X", "X", "X", "X", "X", ".", ".", ".", "."],
+            [".",".", ".", ".", ".", ".", "#", ".", ".", ".", "."]
+        ]
+    )
+
+    loop_checker = GuardMapLoopChecker(current_map=current_map,
+                                    guard_location=(1, 4),
+                                    direction_of_travel=Direction.RIGHT,
+                                    is_on_map=True
+                                    )
+    expected = False
+    actual = loop_checker.gets_stuck_in_loop()
+
+    assert actual == expected
+
+
+
+
 def test_loop_checker_not_returning_to_start_point():
     current_map = DataFrame(
         [

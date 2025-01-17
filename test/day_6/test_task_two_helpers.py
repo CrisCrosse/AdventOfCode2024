@@ -3,7 +3,7 @@ from pandas import DataFrame
 from day_6.Direction import Direction
 from day_6.task_two_helpers import clockwise_slice_contains_blocker, \
     get_slice_perpendicular_to_direction, guard_is_not_about_to_leave_map, next_move_is_not_blocker, \
-    current_guard_location_could_be_blocked_to_create_loop, is_potential_loop_location, move_was_a_rotation
+    is_potential_loop_location, move_was_a_rotation
 
 
 def test_for_previously_hit_blocker_going_up():
@@ -338,7 +338,7 @@ def test_current_location_valid_loop():
     guard_location = (2, 1)
     direction_of_travel = Direction.LEFT
     expected = True
-    actual = current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel)
+    actual = is_potential_loop_location(current_map, guard_location, direction_of_travel)
 
     assert actual == expected
 
@@ -356,11 +356,11 @@ def test_current_location_invalid_loop_next_to_existing_blocker():
     guard_location = (1, 1)
     direction_of_travel = Direction.UP
     expected = False
-    actual = current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel)
+    actual = is_potential_loop_location(current_map, guard_location, direction_of_travel)
 
     assert actual == expected
 
-# move to test_task_two.py once method refactored
+
 def test_current_location_invalid_loop_would_leave():
     current_map = DataFrame(
         [
@@ -375,28 +375,8 @@ def test_current_location_invalid_loop_would_leave():
     )
     guard_location = (1, 3)
     direction_of_travel = Direction.RIGHT
-    expected = False
-    actual = current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel)
-
-    assert actual == expected
-
-
-def test_current_location_invalid_loop_would_leave_after_two_turns():
-    current_map = DataFrame(
-        [
-            [".",".", "#", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".",".", "X", "X", ">", ".", ".", ".", ".", ".", "."],
-            [".",".", "X", ".", ".", ".", ".", ".", ".", ".", "."],
-            ["#",".", "X", "X", "X", "X", "X", "#", ".", ".", "."],
-            [".",".", "X", ".", "#", ".", "X", ".", ".", ".", "."],
-            [".","#", "X", "X", "X", "X", "X", ".", ".", ".", "."],
-            [".",".", ".", ".", ".", ".", "#", ".", ".", ".", "."]
-        ]
-    )
-    guard_location = (1, 4)
-    direction_of_travel = Direction.RIGHT
-    expected = False
-    actual = current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel)
+    expected = True
+    actual = is_potential_loop_location(current_map, guard_location, direction_of_travel)
 
     assert actual == expected
 

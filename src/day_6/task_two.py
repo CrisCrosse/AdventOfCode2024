@@ -1,6 +1,5 @@
 from day_6.Direction import Direction
 from day_6.GuardMapLoopChecker import GuardMapLoopChecker
-from day_6.task_one_helpers import rotate_90_degrees_clockwise
 from day_6.task_two_helpers import is_potential_loop_location
 from src.day_6.task_one import GuardMap
 
@@ -40,6 +39,7 @@ def main():
     guard_map.move_guard_until_leaves_grid()
     # 2220 too high
     print(guard_map.get_loop_count())
+#     1911 too high still :(
 
 if __name__ == '__main__':
     main()

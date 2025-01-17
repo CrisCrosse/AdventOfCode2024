@@ -29,8 +29,10 @@ class GuardMapLoopChecker(GuardMap):
         self.previously_hit_blockers = [hit_location]
         self.set_direction_of_travel(rotate_90_degrees_clockwise(direction_of_travel))
         starting_blocker_position = get_next_guard_location(guard_location, direction_of_travel)
-        current_map.iloc[starting_blocker_position] = "#"
-        self.set_current_map(current_map)
+
+        loop_checker_map = current_map.copy()
+        loop_checker_map.iloc[starting_blocker_position] = "#"
+        self.set_current_map(loop_checker_map)
 
 
     def get_is_back_at_start_point(self):
