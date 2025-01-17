@@ -3,7 +3,7 @@ from pandas import DataFrame
 from day_6.Direction import Direction
 from day_6.task_two_helpers import clockwise_slice_contains_blocker, \
     get_slice_perpendicular_to_direction, guard_is_not_about_to_leave_map, next_move_is_not_blocker, \
-    current_guard_location_could_be_blocked_to_create_loop
+    current_guard_location_could_be_blocked_to_create_loop, is_potential_loop_location, move_was_a_rotation
 
 
 def test_for_previously_hit_blocker_going_up():
@@ -360,8 +360,7 @@ def test_current_location_invalid_loop_next_to_existing_blocker():
 
     assert actual == expected
 
-
-
+# move to test_task_two.py once method refactored
 def test_current_location_invalid_loop_would_leave():
     current_map = DataFrame(
         [
@@ -400,6 +399,37 @@ def test_current_location_invalid_loop_would_leave_after_two_turns():
     actual = current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel)
 
     assert actual == expected
-    # think i need to just recursively,
-    # set another guard going at 90 degrees and see if it reaches back to the start point
-    # all the other logic does not encapsulate all the edge cases
+
+
+def test_loop_checker_no_space_before_leaves_grid():
+    current_map = DataFrame(
+        [
+            ["#", ".", "."],
+            ["X", "X", "#"],
+            ["<", "X", "."],
+            [".", "#", "."],
+        ]
+    )
+    guard_location = (2, 0)
+    direction_of_travel = Direction.LEFT
+    expected = False
+    actual = is_potential_loop_location(current_map, guard_location, direction_of_travel)
+
+    assert actual == expected
+
+def test_move_was_a_rotation_true():
+    current_direction = Direction.UP
+    next_direction = Direction.RIGHT
+    expected = True
+    actual = move_was_a_rotation(current_direction, next_direction)
+
+    assert actual == expected
+
+
+def test_move_was_a_rotation_false():
+    current_direction = Direction.UP
+    next_direction = Direction.UP
+    expected = False
+    actual = move_was_a_rotation(current_direction, next_direction)
+
+    assert actual == expected

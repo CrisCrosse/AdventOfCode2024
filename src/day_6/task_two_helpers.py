@@ -62,8 +62,18 @@ def next_move_is_not_blocker(current_map, guard_location, direction_of_travel):
     return not next_move_is_blocker(current_map, guard_location, direction_of_travel)
 
 
+# this will move to be a method of GuardMapLoopChecker as will need to store blocker locations
 def current_guard_location_could_be_blocked_to_create_loop(current_map, guard_location, direction_of_travel):
     return (next_move_is_not_blocker(current_map, guard_location, direction_of_travel)
             & guard_is_not_about_to_leave_map(current_map, guard_location, direction_of_travel)
             & clockwise_slice_contains_blocker(current_map, guard_location, direction_of_travel)
             )
+
+
+def is_potential_loop_location(current_map, guard_location, direction_of_travel) -> bool:
+    return clockwise_slice_contains_blocker(current_map, guard_location, direction_of_travel) \
+        and guard_is_not_about_to_leave_map(current_map, guard_location, direction_of_travel)
+
+
+def move_was_a_rotation(current_direction, next_direction) -> bool:
+    return current_direction != next_direction
