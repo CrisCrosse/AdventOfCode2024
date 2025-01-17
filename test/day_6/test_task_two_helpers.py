@@ -1,7 +1,7 @@
 from pandas import DataFrame
 
 from day_6.Direction import Direction
-from day_6.task_two_helpers import clockwise_slice_contains_previously_hit_blocker, \
+from day_6.task_two_helpers import clockwise_slice_contains_blocker, \
     get_slice_perpendicular_to_direction, guard_is_not_about_to_leave_map, next_move_is_not_blocker, \
     current_guard_location_could_be_blocked_to_create_loop
 
@@ -18,10 +18,10 @@ def test_for_previously_hit_blocker_going_up():
     guard_location = (1, 1)
     direction_of_travel = Direction.UP
     expected = True
-    actual = clockwise_slice_contains_previously_hit_blocker(current_map,
-                                                             guard_location,
-                                                             direction_of_travel
-                                                             )
+    actual = clockwise_slice_contains_blocker(current_map,
+                                                                                     guard_location,
+                                                                                     direction_of_travel
+                                                                                     )
     assert actual == expected
 
 
@@ -43,10 +43,10 @@ def test_for_previously_hit_blocker_edge_case():
     guard_location = (8, 4)
     direction_of_travel = Direction.LEFT
     expected = True
-    actual = clockwise_slice_contains_previously_hit_blocker(current_map,
-                                                             guard_location,
-                                                             direction_of_travel
-                                                             )
+    actual = clockwise_slice_contains_blocker(current_map,
+                                                                                     guard_location,
+                                                                                     direction_of_travel
+                                                                                     )
     assert actual == expected
 
 
@@ -62,10 +62,10 @@ def test_for_previously_hit_blocker_false():
     guard_location = (0, 1)
     direction_of_travel = Direction.UP
     expected = False
-    actual = clockwise_slice_contains_previously_hit_blocker(current_map,
-                                                             guard_location,
-                                                             direction_of_travel
-                                                             )
+    actual = clockwise_slice_contains_blocker(current_map,
+                                                                                     guard_location,
+                                                                                     direction_of_travel
+                                                                                     )
     assert actual == expected
 
 

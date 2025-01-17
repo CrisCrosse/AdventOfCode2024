@@ -1,6 +1,6 @@
 from day_6.Direction import Direction
 from day_6.task_one_helpers import rotate_90_degrees_clockwise
-from day_6.task_two_helpers import clockwise_slice_contains_previously_hit_blocker, guard_is_not_about_to_leave_map
+from day_6.task_two_helpers import clockwise_slice_contains_blocker, guard_is_not_about_to_leave_map
 from src.day_6.task_one import GuardMap
 
 class GuardMapWithBlockerPlacement(GuardMap):
@@ -19,11 +19,12 @@ class GuardMapWithBlockerPlacement(GuardMap):
         while self.is_on_map:
             self.get_next_map_position_and_update_self()
 
-            if clockwise_slice_contains_previously_hit_blocker(*self.get_map_properties_other_than_is_on_map()):
+            if clockwise_slice_contains_blocker(*self.get_map_properties_other_than_is_on_map()) \
+                    and guard_is_not_about_to_leave_map(*self.get_map_properties_other_than_is_on_map()):
                 # massive increase in time complexity
                 print("potential loop found")
                 loop_checker = GuardMapLoopChecker(*self.get_map_properties_other_than_is_on_map(), is_on_map=True)
-                if loop_checker.guard_will_return_to_start_point_if_blocker_placed_ahead():
+                if loop_checker.guard_will_get_stuck_in_loop_if_blocker_placed_ahead():
                     new_loop_count = self.get_potential_loop_count() + 1
                     print(f"loop found, loop count is now: {new_loop_count}")
                     self.set_potential_loop_count(new_loop_count)
@@ -54,10 +55,10 @@ class GuardMapLoopChecker(GuardMap):
         return self.get_guard_location() == self.get_start_point()
 
 
-    def guard_will_return_to_start_point_if_blocker_placed_ahead(self):
+    def guard_will_get_stuck_in_loop_if_blocker_placed_ahead(self):
         while self.is_on_map:
             self.get_next_map_position_and_update_self()
-            if self.guard_is_back_at_start() & guard_is_not_about_to_leave_map(*self.get_map_properties_other_than_is_on_map()):
+            if self.guard_is_back_at_start():
                 return True
         return False
 

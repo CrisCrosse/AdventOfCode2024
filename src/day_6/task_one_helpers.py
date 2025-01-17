@@ -26,6 +26,10 @@ def get_next_set_of_map_features(current_map: DataFrame,
         guard_location_for_next_map = current_guard_location
 
     elif new_map.iloc[projected_guard_location] == "#":
+        # need to record the guard_location at the point of the blocker,
+        # that the outer loop can hit --> if we repeat and hit the same blocker from the same direction
+        # then we are in a loop
+        # need to make this an instance method --> append it to a list of blockers hit + direction
         direction_for_next_map = rotate_90_degrees_clockwise(current_direction)
         new_map.iloc[current_guard_location] = direction_symbols[direction_for_next_map]
         guard_location_for_next_map = current_guard_location
