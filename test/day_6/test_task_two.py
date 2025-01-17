@@ -62,7 +62,7 @@ def test_loop_checker():
                                     direction_of_travel=direction_of_travel,
                                     is_on_map=True
                                     )
-    actual = guard_map.guard_will_return_to_start_point()
+    actual = guard_map.guard_will_return_to_start_point_if_blocker_placed_ahead()
 
     assert actual == expected
 
@@ -84,7 +84,7 @@ def test_loop_checker_no_space_before_leaves_grid():
                                     direction_of_travel=direction_of_travel,
                                     is_on_map=True
                                     )
-    actual = guard_map.guard_will_return_to_start_point()
+    actual = guard_map.guard_will_return_to_start_point_if_blocker_placed_ahead()
 
     assert actual == expected
 
@@ -108,7 +108,7 @@ def test_move_guard_until_leaves_grid_bypass_an_obstacle_on_the_right():
                                     )
     expected = False
 
-    actual = guard_map.guard_will_return_to_start_point()
+    actual = guard_map.guard_will_return_to_start_point_if_blocker_placed_ahead()
     assert actual == expected
 
 
@@ -131,5 +131,5 @@ def test_move_guard_until_leaves_grid_bypass_an_obstacle_on_the_right_but_rejoin
                                     )
     expected = True
 
-    actual = guard_map.guard_will_return_to_start_point()
+    actual = guard_map.guard_will_return_to_start_point_if_blocker_placed_ahead()
     assert actual == expected

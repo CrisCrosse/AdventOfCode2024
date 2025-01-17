@@ -1,16 +1,6 @@
 from day_6.Direction import Direction
 from day_6.task_one_helpers import rotate_90_degrees_clockwise
 from day_6.task_two_helpers import clockwise_slice_contains_previously_hit_blocker, guard_is_not_about_to_leave_map
-# the smallest part of the problem is:
-# finding places along the guard path
-# , where one can turn right 90 degrees, and you hit an obstacle on the same face as in the normal path
-# ie an X then an obstacle
-
-# guard move
-# at each square, check the 90 degree offshoot clockwise
-# for index in row (or column) check if current index is an X and next is an #
-# if so current square is a potential blocker position, add 1 to count
-
 from src.day_6.task_one import GuardMap
 
 class GuardMapWithBlockerPlacement(GuardMap):
@@ -28,18 +18,22 @@ class GuardMapWithBlockerPlacement(GuardMap):
     def move_guard_until_leaves_grid(self):
         while self.is_on_map:
             self.get_next_map_position_and_update_self()
-            if clockwise_slice_contains_previously_hit_blocker(
-                    *self.get_map_properties_other_than_is_on_map())\
-                    and guard_is_not_about_to_leave_map(*self.get_map_properties_other_than_is_on_map()) & not_before_existing_blocker:
-                new_loop_count = self.get_potential_loop_count() + 1
-                map_to_view = self.get_current_map()
-                self.set_potential_loop_count(new_loop_count)
+
+            if clockwise_slice_contains_previously_hit_blocker(*self.get_map_properties_other_than_is_on_map()):
+                # massive increase in time complexity
+                print("potential loop found")
+                loop_checker = GuardMapLoopChecker(*self.get_map_properties_other_than_is_on_map(), is_on_map=True)
+                if loop_checker.guard_will_return_to_start_point_if_blocker_placed_ahead():
+                    new_loop_count = self.get_potential_loop_count() + 1
+                    print(f"loop found, loop count is now: {new_loop_count}")
+                    self.set_potential_loop_count(new_loop_count)
         return self.get_current_map()
 
 
 class GuardMapLoopChecker(GuardMap):
     is_back_at_start_point: bool
     start_point: tuple[int, int]
+    
     def __init__(self, current_map, guard_location, direction_of_travel, is_on_map):
         super().__init__(current_map, guard_location, direction_of_travel, is_on_map)
         self.is_back_at_start_point = False
@@ -60,7 +54,7 @@ class GuardMapLoopChecker(GuardMap):
         return self.get_guard_location() == self.get_start_point()
 
 
-    def guard_will_return_to_start_point(self):
+    def guard_will_return_to_start_point_if_blocker_placed_ahead(self):
         while self.is_on_map:
             self.get_next_map_position_and_update_self()
             if self.guard_is_back_at_start() & guard_is_not_about_to_leave_map(*self.get_map_properties_other_than_is_on_map()):
