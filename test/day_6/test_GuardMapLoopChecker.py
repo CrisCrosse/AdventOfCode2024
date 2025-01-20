@@ -1,7 +1,34 @@
 from pandas import DataFrame
 
 from day_6.Direction import Direction
-from day_6.GuardMapLoopChecker import GuardMapLoopChecker, MapPositionWhenBlockerHit
+from day_6.GuardMapLoopChecker import GuardMapLoopChecker, GuardLocationWhenBlockerHit
+
+
+def test_loop_checker_not_mutating_passed_in_map():
+    passed_in_map = DataFrame(
+        [
+            [".", "#", ".", "."],
+            [".", ".", ".", "#"],
+            ["Y", "<", ".", "."],
+            [".", ".", "#", "."],
+        ]
+    )
+    expected = DataFrame(
+        [
+            [".", "#", ".", "."],
+            [".", ".", ".", "#"],
+            ["#", "^", ".", "."],
+            [".", ".", "#", "."],
+        ]
+    )
+    loop_checker = GuardMapLoopChecker(current_map=passed_in_map,
+                                       guard_location=(2, 1),
+                                       direction_of_travel=Direction.LEFT,
+                                       is_on_map=True
+                                       )
+    actual = loop_checker.get_current_map()
+    assert actual.equals(expected)
+    assert passed_in_map.equals(actual) is False
 
 
 def test_loop_checker_adjacent_to_blocker():
@@ -53,7 +80,6 @@ def test_loop_checker():
     assert actual == expected
 
 
-
 def test_loop_checker_hits_an_obstacle_and_leaves():
     current_map = DataFrame(
         [
@@ -77,31 +103,28 @@ def test_loop_checker_hits_an_obstacle_and_leaves():
     assert actual == expected
 
 
-
 def test_loop_checker_hits_two_obstacles_and_leaves():
     current_map = DataFrame(
         [
-            [".",".", "#", ".", ".", ".", ".", ".", ".", ".", "."],
-            [".",".", "X", "X", ">", "Y", ".", ".", ".", ".", "."],
-            [".",".", "X", ".", ".", ".", ".", ".", ".", ".", "."],
-            ["#",".", "X", "X", "X", "X", "X", "#", ".", ".", "."],
-            [".",".", "X", ".", "#", ".", "X", ".", ".", ".", "."],
-            [".","#", "X", "X", "X", "X", "X", ".", ".", ".", "."],
-            [".",".", ".", ".", ".", ".", "#", ".", ".", ".", "."]
+            [".", ".", "#", ".", ".", ".", ".", ".", ".", ".", "."],
+            [".", ".", "X", "X", ">", "Y", ".", ".", ".", ".", "."],
+            [".", ".", "X", ".", ".", ".", ".", ".", ".", ".", "."],
+            ["#", ".", "X", "X", "X", "X", "X", "#", ".", ".", "."],
+            [".", ".", "X", ".", "#", ".", "X", ".", ".", ".", "."],
+            [".", "#", "X", "X", "X", "X", "X", ".", ".", ".", "."],
+            [".", ".", ".", ".", ".", ".", "#", ".", ".", ".", "."]
         ]
     )
 
     loop_checker = GuardMapLoopChecker(current_map=current_map,
-                                    guard_location=(1, 4),
-                                    direction_of_travel=Direction.RIGHT,
-                                    is_on_map=True
-                                    )
+                                       guard_location=(1, 4),
+                                       direction_of_travel=Direction.RIGHT,
+                                       is_on_map=True
+                                       )
     expected = False
     actual = loop_checker.gets_stuck_in_loop()
 
     assert actual == expected
-
-
 
 
 def test_loop_checker_not_returning_to_start_point():
@@ -168,10 +191,9 @@ def test_move_to_next_location_and_record_blockers_hit():
     )
     guard_location = (2, 1)
     direction_of_travel = Direction.DOWN
-    added_initial_blocker= MapPositionWhenBlockerHit(location=(2, 1), direction=Direction.DOWN)
-    expected_blocker = MapPositionWhenBlockerHit(location=(2, 1), direction=Direction.LEFT)
+    added_initial_blocker = GuardLocationWhenBlockerHit(location=(2, 1), direction=Direction.DOWN)
+    expected_blocker = GuardLocationWhenBlockerHit(location=(2, 1), direction=Direction.LEFT)
     expected = [added_initial_blocker, expected_blocker]
-
 
     guard_map = GuardMapLoopChecker(current_map=current_map,
                                     guard_location=guard_location,
@@ -197,23 +219,21 @@ def test_gets_stuck_in_loop_false_blocker_hits_tested():
     guard_location = (2, 3)
     direction_of_travel = Direction.DOWN
 
-    added_initial_blocker = MapPositionWhenBlockerHit(location=(2, 3), direction=Direction.DOWN)
-    first_blocker = MapPositionWhenBlockerHit(location=(2, 1), direction=Direction.LEFT)
-    second_blocker = MapPositionWhenBlockerHit(location=(1, 1), direction=Direction.UP)
-    third_blocker = MapPositionWhenBlockerHit(location=(1, 2), direction=Direction.RIGHT)
+    added_initial_blocker = GuardLocationWhenBlockerHit(location=(2, 3), direction=Direction.DOWN)
+    first_blocker = GuardLocationWhenBlockerHit(location=(2, 1), direction=Direction.LEFT)
+    second_blocker = GuardLocationWhenBlockerHit(location=(1, 1), direction=Direction.UP)
+    third_blocker = GuardLocationWhenBlockerHit(location=(1, 2), direction=Direction.RIGHT)
 
     expected = False
     expected_hit_blockers = [added_initial_blocker, first_blocker, second_blocker, third_blocker]
 
     loop_checker = GuardMapLoopChecker(current_map=current_map,
-                                    guard_location=guard_location,
-                                    direction_of_travel=direction_of_travel,
-                                    is_on_map=True
-                                    )
+                                       guard_location=guard_location,
+                                       direction_of_travel=direction_of_travel,
+                                       is_on_map=True
+                                       )
     actual = loop_checker.gets_stuck_in_loop()
     actual_hit_blockers = loop_checker.get_previously_hit_blockers()
 
     assert actual == expected
     assert actual_hit_blockers == expected_hit_blockers
-
-

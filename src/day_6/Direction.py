@@ -10,3 +10,11 @@ class Direction(str, Enum):
 
     def deep_copy(self):
         return deepcopy(self)
+
+
+direction_symbols = {
+    Direction.UP: "^",
+    Direction.DOWN: "v",
+    Direction.RIGHT: ">",
+    Direction.LEFT: "<"
+}

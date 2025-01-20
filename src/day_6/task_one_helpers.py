@@ -2,7 +2,7 @@ from typing import Optional
 
 from pandas import DataFrame
 
-from day_6.Direction import Direction
+from day_6.Direction import Direction, direction_symbols
 
 
 def get_next_set_of_map_features(current_map: DataFrame,
@@ -11,12 +11,6 @@ def get_next_set_of_map_features(current_map: DataFrame,
                                  ) -> tuple[DataFrame, tuple[int, int], Direction, Optional[bool]]:
     projected_guard_location = get_next_guard_location(current_guard_location, current_direction)
     new_map = current_map.copy()
-    direction_symbols = {
-        Direction.UP: "^",
-        Direction.DOWN: "v",
-        Direction.RIGHT: ">",
-        Direction.LEFT: "<"
-    }
     is_on_map = True
 
     if is_next_guard_location_out_of_bounds(projected_guard_location, current_map):
