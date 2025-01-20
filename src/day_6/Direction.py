@@ -1,4 +1,5 @@
 from enum import Enum
+from copy import deepcopy
 
 
 class Direction(str, Enum):
@@ -6,3 +7,6 @@ class Direction(str, Enum):
     DOWN = "v"
     LEFT = "<"
     RIGHT = ">"
+
+    def deep_copy(self):
+        return deepcopy(self)
