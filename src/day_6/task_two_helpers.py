@@ -1,7 +1,10 @@
+from typing import Optional
+
 from pandas import DataFrame
 
-from day_6.Direction import Direction
-from day_6.task_one_helpers import is_next_guard_location_out_of_bounds, get_next_guard_location
+from day_6.Direction import Direction, direction_symbols
+from day_6.task_one_helpers import is_next_guard_location_out_of_bounds, get_next_guard_location, \
+    rotate_90_degrees_clockwise
 
 
 # have missed an edge case where the guard is at the edge of the map, a blocker cannot be placed ahead of them because the blocker would be off the map
@@ -80,3 +83,31 @@ def next_move_is_blocker_again(current_map, guard_location, direction_of_travel)
 
 def move_was_a_rotation(current_direction, next_direction) -> bool:
     return current_direction != next_direction
+
+
+def get_next_set_of_map_features_for_loop_checker(current_map: DataFrame,
+                                                  current_guard_location: tuple[int, int],
+                                                  current_direction: Direction
+                                                  ) -> tuple[DataFrame, tuple[int, int], Direction, Optional[bool]]:
+    projected_guard_location = get_next_guard_location(current_guard_location, current_direction)
+    new_map = current_map.copy()
+    is_on_map = True
+
+    if is_next_guard_location_out_of_bounds(projected_guard_location, current_map):
+        is_on_map = False
+        new_map.iloc[current_guard_location] = "Y"
+        direction_for_next_map = current_direction
+        guard_location_for_next_map = current_guard_location
+
+    elif new_map.iloc[projected_guard_location] == "#":
+        direction_for_next_map = rotate_90_degrees_clockwise(current_direction)
+        new_map.iloc[current_guard_location] = direction_symbols[direction_for_next_map]
+        guard_location_for_next_map = current_guard_location
+
+    else:
+        new_map.iloc[current_guard_location] = "Y"
+        new_map.iloc[projected_guard_location] = direction_symbols[current_direction]
+        direction_for_next_map = current_direction
+        guard_location_for_next_map = projected_guard_location
+
+    return new_map, guard_location_for_next_map, direction_for_next_map, is_on_map

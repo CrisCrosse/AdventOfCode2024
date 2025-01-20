@@ -3,8 +3,8 @@ from day_6.task_two import main, GuardMapWithLoopCounter
 from pandas import DataFrame
 
 
-# def test_main_infinite_loop_debug():
-#     main()
+def test_main_infinite_loop_debug():
+    main()
 
 
 def test_loop_counter_does_not_count_start_location():

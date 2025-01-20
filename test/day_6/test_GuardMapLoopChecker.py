@@ -237,3 +237,47 @@ def test_gets_stuck_in_loop_false_blocker_hits_tested():
 
     assert actual == expected
     assert actual_hit_blockers == expected_hit_blockers
+
+
+def test_is_back_at_previously_hit_blocker():
+    current_map = DataFrame(
+        [
+            [".", "#", ".", ".", "."],
+            [".", ".", ".", "#", "."],
+            ["#", ".", ".", "v", "."],
+            [".", ".", ".", "Y", "."]
+        ]
+    )
+    loop_checker = GuardMapLoopChecker(current_map=current_map,
+                                       guard_location=(2, 3),
+                                       direction_of_travel=Direction.DOWN,
+                                       is_on_map=True
+                                       )
+    loop_checker.add_to_previously_hit_blockers(guard_location=(2, 3), direction=Direction.LEFT)
+    expected = True
+    actual = loop_checker.is_back_at_previously_hit_blocker()
+    assert actual == expected
+
+
+def test_is_back_at_previously_hit_blocker_returns_false():
+    current_map = DataFrame(
+        [
+            [".", "#", ".", ".", "."],
+            [".", ".", ".", "#", "."],
+            ["#", ".", ".", "v", "."],
+            [".", ".", ".", "Y", "."]
+        ]
+    )
+    loop_checker = GuardMapLoopChecker(current_map=current_map,
+                                       guard_location=(2, 3),
+                                       direction_of_travel=Direction.DOWN,
+                                       is_on_map=True
+                                       )
+    expected = False
+    actual = loop_checker.is_back_at_previously_hit_blocker()
+    assert actual == expected
+
+
+
+# are there any cases where you can get to a point of a previously hit blocker and not be a loop?
+# I thought not because we are checking for the direction as well

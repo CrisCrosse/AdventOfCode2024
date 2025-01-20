@@ -2,8 +2,9 @@ from dataclasses import dataclass
 
 from day_6.Direction import Direction, direction_symbols
 from day_6.task_one import GuardMap
-from day_6.task_one_helpers import rotate_90_degrees_clockwise, get_next_set_of_map_features, get_next_guard_location
-from day_6.task_two_helpers import move_was_a_rotation
+from day_6.task_one_helpers import rotate_90_degrees_clockwise, get_next_guard_location
+from day_6.task_two_helpers import move_was_a_rotation, get_next_set_of_map_features_for_loop_checker
+
 
 @dataclass
 class GuardLocationWhenBlockerHit:
@@ -56,7 +57,7 @@ class GuardMapLoopChecker(GuardMap):
 
     def move_to_next_location_and_record_blockers_hit(self):
         current_map, current_guard_location, current_direction = self.get_map_properties_other_than_is_on_map()
-        next_map, next_guard_location, next_direction, is_on_map = get_next_set_of_map_features(current_map, current_guard_location, current_direction)
+        next_map, next_guard_location, next_direction, is_on_map = get_next_set_of_map_features_for_loop_checker(current_map, current_guard_location, current_direction)
 
         if move_was_a_rotation(current_direction, next_direction):
             self.add_to_previously_hit_blockers(current_guard_location, current_direction)
@@ -71,3 +72,4 @@ class GuardMapLoopChecker(GuardMap):
         for blocker in self.get_previously_hit_blockers():
             if current_guard_location == blocker.location and current_direction == blocker.direction:
                 return True
+        return False
