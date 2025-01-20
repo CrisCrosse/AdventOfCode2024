@@ -18,13 +18,17 @@ class GuardMapWithLoopCounter(GuardMap):
 
     def move_guard_until_leaves_grid(self):
         loop_count = 0
+        potential_blocked_locations = []
         while self.is_on_map:
             self.get_next_map_position_and_update_self()
 
             if is_potential_loop_location(*self.get_map_properties_other_than_is_on_map()):
                 loop_checker = self.instantiate_loop_checker()
                 if loop_checker.gets_stuck_in_loop():
+                    map_position_of_potential_loop = loop_checker.get_previously_hit_blockers()[0]
+                    potential_blocked_locations.append(map_position_of_potential_loop)
                     loop_count += 1
+                    # seem to be hitting here without gets_stuck in loop returning true
                     print(f"loop found, loop count is now: {loop_count}")
 
         self.set_loop_count(loop_count)
@@ -44,6 +48,7 @@ def main():
     # 2220 too high
     print(guard_map.get_loop_count())
 #     1911 too high still :(
+# 1748 is correct
 
 if __name__ == '__main__':
     main()
