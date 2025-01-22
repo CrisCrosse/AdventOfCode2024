@@ -67,6 +67,7 @@ def main_part_2() -> int:
     for ro in range(num_rows):
         for co in range(num_cols):
             if grid[ro][co] != ".":
+                # skips iteration for # and ^
                 continue
             grid[ro][co] = "#"
             if check_for_loop(grid, start_r, start_c):
