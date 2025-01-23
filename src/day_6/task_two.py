@@ -24,15 +24,20 @@ class GuardMapWithLoopCounter(GuardMap):
 
     def add_all_visited_positions_at_the_start(self):
         while self.is_on_map:
-            self.get_next_map_position_and_update_self()
+            try:
+                self.get_next_map_position_and_update_self()
+            except IndexError:
+                break
             self.add_to_visited_locations(self.get_guard_location())
 
 
     def loop_checker(self):
-        # this currently matches every single visited block
         visited_on_this_loop_check = {(self.get_guard_location(), self.get_direction_of_travel())}
         while self.is_on_map:
-            self.get_next_map_position_and_update_self()
+            try:
+                self.get_next_map_position_and_update_self()
+            except IndexError:
+                break
             current_state = (self.get_guard_location(), self.get_direction_of_travel())
             if current_state in visited_on_this_loop_check:
                 return True
@@ -48,6 +53,7 @@ class GuardMapWithLoopCounter(GuardMap):
         starting_on_map = True
 
         for block in visited_blocks:
+            print(block)
             self.set_current_map(starting_map)
             self.current_map.iloc[block] = "#"
             self.set_guard_location(starting_location)

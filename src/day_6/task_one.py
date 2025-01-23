@@ -78,7 +78,10 @@ class GuardMap:
 
     def move_guard_until_leaves_grid(self):
         while self.is_on_map:
-            self.get_next_map_position_and_update_self()
+            try:
+                self.get_next_map_position_and_update_self()
+            except IndexError:
+                break
             map_for_viewing = self.get_current_map()
         return self.get_current_map()
 

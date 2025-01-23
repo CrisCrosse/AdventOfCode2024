@@ -16,8 +16,9 @@ def get_next_set_of_map_features(current_map: DataFrame,
     if is_next_guard_location_out_of_bounds(projected_guard_location, current_map):
         is_on_map = False
         new_map.iloc[current_guard_location] = "X"
-        direction_for_next_map = current_direction
-        guard_location_for_next_map = current_guard_location
+        raise IndexError("Guard is about to leave the map")
+        # direction_for_next_map = current_direction
+        # guard_location_for_next_map = projected_guard_location
 
     elif new_map.iloc[projected_guard_location] == "#":
         direction_for_next_map = rotate_90_degrees_clockwise(current_direction)
