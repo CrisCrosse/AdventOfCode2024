@@ -1,16 +1,20 @@
 from day_6.Direction import Direction
 from day_6.GuardMapLoopChecker import GuardMapLoopChecker
-from day_6.task_one_helpers import get_starting_map_from_input
+from day_6.task_one_helpers import get_starting_map_from_input, is_next_guard_location_out_of_bounds
 from src.day_6.task_one import GuardMap
+from pandas import DataFrame
 
 class GuardMapWithLoopCounter(GuardMap):
     visited_locations: set[tuple[int, int]]
     found_loop_count: int
+    start_map: DataFrame
 
     def __init__(self, current_map, guard_location, direction_of_travel, is_on_map):
         super().__init__(current_map, guard_location, direction_of_travel, is_on_map)
         self.found_loop_count = 0
         self.visited_locations = set()
+        # will this execute after the super().__init__? should pick up the input txt if so
+        self.start_map = self.get_current_map().copy(True)
 
     def get_loop_count(self):
         return self.found_loop_count
@@ -19,41 +23,38 @@ class GuardMapWithLoopCounter(GuardMap):
         self.found_loop_count = potential_loop_count
 
     def add_to_visited_locations(self, location: tuple[int, int]):
+        if is_next_guard_location_out_of_bounds(location, self.current_map):
+            return
         self.visited_locations.add(location)
 
 
     def add_all_visited_positions_at_the_start(self):
         while self.is_on_map:
-            try:
-                self.get_next_map_position_and_update_self()
-            except IndexError:
-                break
+            self.get_next_map_position_and_update_self()
             self.add_to_visited_locations(self.get_guard_location())
 
 
     def loop_checker(self):
         visited_on_this_loop_check = {(self.get_guard_location(), self.get_direction_of_travel())}
         while self.is_on_map:
-            try:
-                self.get_next_map_position_and_update_self()
-            except IndexError:
-                break
-            current_state = (self.get_guard_location(), self.get_direction_of_travel())
-            if current_state in visited_on_this_loop_check:
-                return True
-            visited_on_this_loop_check.add(current_state)
+            self.get_next_map_position_and_update_self()
+            if self.is_on_map:
+                current_state = (self.get_guard_location(), self.get_direction_of_travel())
+                if current_state in visited_on_this_loop_check:
+                    return True
+                visited_on_this_loop_check.add(current_state)
         return False
 
     def try_all_visited_blocks_for_loop(self, visited_blocks: set[tuple[int, int]]):
         loop_count = 0
-        starting_map = get_starting_map_from_input()
+        starting_map = self.start_map
         self.set_current_map(starting_map)
         starting_location =  self.get_starting_guard_location_from_map()
         starting_direction = Direction.UP
         starting_on_map = True
 
+        # something added recently has slowed this down massively
         for block in visited_blocks:
-            print(block)
             self.set_current_map(starting_map)
             self.current_map.iloc[block] = "#"
             self.set_guard_location(starting_location)

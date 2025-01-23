@@ -27,7 +27,7 @@ class GuardMap:
         self.is_on_map = is_on_map
 
     def set_current_map(self, current_map: DataFrame) -> None:
-        self.current_map = current_map
+        self.current_map = current_map.copy(True)
 
     def set_guard_location(self, guard_location: tuple[int, int]) -> None:
         self.guard_location = guard_location

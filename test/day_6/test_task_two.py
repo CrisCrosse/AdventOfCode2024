@@ -3,8 +3,8 @@ from day_6.task_two import main, GuardMapWithLoopCounter
 from pandas import DataFrame
 
 
-def test_main_infinite_loop_debug():
-    main()
+# def test_main_infinite_loop_debug():
+#     main()
 
 
 def test_loop_counter_does_not_count_start_location():
@@ -147,8 +147,10 @@ def test_move_guard_until_leaves_grid_from_example():
                                         direction_of_travel=Direction.UP,
                                         is_on_map=True
                                         )
-    actual = guard_map.move_guard_until_leaves_grid()
-    actual_loop_count = guard_map.get_loop_count()
+    guard_map.add_all_visited_positions_at_the_start()
+    actual_visited_map = guard_map.get_current_map().copy(True)
+    guard_map.try_all_visited_blocks_for_loop(guard_map.visited_locations)
+    actual = guard_map.get_loop_count()
 
-    assert actual.equals(expected)
-    assert actual_loop_count == 6
+    assert actual_visited_map.equals(expected)
+    assert actual == 6
